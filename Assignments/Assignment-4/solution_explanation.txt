@@ -1,0 +1,391 @@
+
+CREATE DATABASE
+You are now connected to database "assignment4vkvats" as user "vibhas".
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+Creating a global variable table for controlling the enrollment start and stop for later part of solutions.
+
+CREATE TABLE
+INSERT 0 1
+
+
+Question 1.a
+
+
+
+For checking primary key constraint, we check if the sid already exists in student relation or not.
+
+CREATE FUNCTION
+CREATE TRIGGER
+INSERT 0 4
+Primary key check on student relation
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:85: ERROR:  Sid already exists!, primary key violation
+CONTEXT:  PL/pgSQL function primarykeycheckstudent() line 4 at RAISE
+
+The error shows that the sid is already present in the student relation so its a primary key violation.
+
+
+For checking primary key constraint, we check if the cno already exists in course relation or not.
+
+CREATE FUNCTION
+CREATE TRIGGER
+INSERT 0 4
+Primary key check on course relation
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:119: ERROR:  Cno already exists! primary key violation
+CONTEXT:  PL/pgSQL function primarykeycheckcourse() line 4 at RAISE
+
+
+Question 1.b
+
+
+
+To check foreign key we will need to check that if the values already exists in the course realtion or not
+
+CREATE FUNCTION
+CREATE TRIGGER
+foreign key satisfaction check on prerequisite
+
+INSERT 0 1
+
+The insertion happens which shows that the foreign key constrainst is satisfied.
+
+These insertion will not happen as it violates the foreign key condition.
+
+Foreign key violation check for wrong course no
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:160: ERROR:  Cno not in Course relation, foreign key violation
+CONTEXT:  PL/pgSQL function foreignkeycheckprerequisite() line 4 at RAISE
+Foreign key violation check for wrong prerequisite no
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:163: ERROR:  prerequisite not in Course relation, foreign key violation
+CONTEXT:  PL/pgSQL function foreignkeycheckprerequisite() line 7 at RAISE
+
+To check foreign key we will need to check that if the values already exists in the student realtion or not
+
+CREATE FUNCTION
+CREATE TRIGGER
+Foreign key violation check on hastaken relation
+
+These insertion will not happen as it violates the foreign key condition.
+
+Foreign key violation check for wrong student id no
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:195: ERROR:  Sid not in Student relation, Foreign key violation
+CONTEXT:  PL/pgSQL function foreignkeycheckhastaken() line 4 at RAISE
+Foreign key violation check for wrong course no
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:198: ERROR:  Cno not in Course relation, Foreign key violation
+CONTEXT:  PL/pgSQL function foreignkeycheckhastaken() line 7 at RAISE
+
+To check foreign key we will need to check that if the values already exists in the course realtion or not
+ and the cno already exists in the course relation or not
+
+CREATE FUNCTION
+CREATE TRIGGER
+Foreign key satisfaction check on enroll
+
+INSERT 0 1
+Foreign key violation check on enroll relation
+
+These insertion will not happen as it violates the foreign key condition.
+
+Foreign key violation check for wrong student id no
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:234: ERROR:  Sid not in Student relation, Foreign key violation
+CONTEXT:  PL/pgSQL function foreignkeycheckenroll() line 4 at RAISE
+Foreign key violation check for wrong course no
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:237: ERROR:  Cno not in course, foreign key violation
+CONTEXT:  PL/pgSQL function foreignkeycheckenroll() line 6 at RAISE
+
+To check foreign key we will need to check that if the values already exists in the course realtion or not
+ and the cno already exists in the course relation or not
+
+CREATE FUNCTION
+CREATE TRIGGER
+Foreign key satisfaction check on waitlist
+
+INSERT 0 1
+Foreign key violation check on waitlist relation
+
+Foreign key violation check for wrong student id no
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:270: ERROR:  Sid not in student relation Foreign key violation
+CONTEXT:  PL/pgSQL function foreignkeycheckwaitlist() line 4 at RAISE
+Foreign key violation check for wrong course no
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:273: ERROR:  Cno not in course relation Foreign key violation
+CONTEXT:  PL/pgSQL function foreignkeycheckwaitlist() line 7 at RAISE
+
+when a student deletes from student relation, he will also be deleted from Enroll and waitlist realtion
+there is not delete clause on hastaken relation, so no data will be deleted from hastaken relation
+
+delete cascade on hastaken relation is redundant, as in later part of the assignment we have to implement no delete
+restriction on has taken so I have omitted delete cascade from hastaken here.
+CREATE FUNCTION
+CREATE TRIGGER
+Delete cascade check on student relation on sid 1005
+
+DELETE 1
+checking in enroll and waitlist relation 
+
+ sid | cno 
+-----+-----
+(0 rows)
+
+ sid | cno | position 
+-----+-----+----------
+(0 rows)
+
+Sid has been deleted from enroll and waitlist as well. 
+
+
+on deletion of a course from the course has to be deleted from all relevant courses
+
+CREATE FUNCTION
+CREATE TRIGGER
+inserting values in different table to demonstrate working of delete cascade
+
+INSERT 0 1
+course 102 is already present in the course
+
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+delete cascade on corse with cno 102
+
+DELETE 1
+dislaying cno from 102, there wont be any outcome as it has been deleted
+
+ cno | cname | total | max 
+-----+-------+-------+-----
+(0 rows)
+
+ cno | prereq 
+-----+--------
+(0 rows)
+
+ sid | cno 
+-----+-----
+(0 rows)
+
+ sid | cno | position 
+-----+-----+----------
+(0 rows)
+
+course 102 has been deleted rom all around.
+it has also been deleted from prerequisite which enforces the condition of not delete later in the assignment.
+
+
+Question 1.c
+
+
+ from here on in any case there will be no delete on hastaken relation.
+INSERT 0 1
+CREATE FUNCTION
+CREATE TRIGGER
+NO deletion check on hastaken
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:384: ERROR:  Can not delete past records from HasTaken relation
+CONTEXT:  PL/pgSQL function nodeletiononhastaken() line 3 at RAISE
+conditional enroll on hastaken relation
+thing will be deleted only when enrollment has not started yet
+for keeping the track of start of enrollment i have made a relation toggle which toggles between 0 and 1 
+it is zero when the enrolling has not started but the moment first enrollment happens it is updated to 1
+and then things are not allowed to be enserted into hastaken, course and prereqisite.
+All of these are simulated down below in different questions.
+CREATE FUNCTION
+CREATE TRIGGER
+Conditional insert on hastaken table,
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:409: ERROR:  Can not add to hastaken once enrollment started
+CONTEXT:  PL/pgSQL function conditional_insert_into_hastaken() line 4 at RAISE
+
+
+Question 1.d
+
+
+CREATE FUNCTION
+CREATE TRIGGER
+No delete on course relation demo
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:431: ERROR:  Can not delete a course
+CONTEXT:  PL/pgSQL function nodeleteoncourse() line 3 at RAISE
+CREATE FUNCTION
+CREATE TRIGGER
+INSERT 0 2
+No delete on course relation demo for cno 103 which is already present in course.
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:449: ERROR:  Can not delete from prerequisite
+CONTEXT:  PL/pgSQL function nodeleteonprerequisite() line 3 at RAISE
+no insert into course if enrollment started 
+setting enrollment toggle to 0 i.e. enrollment has not started.
+UPDATE 1
+display of enrollment status in courses
+ enrolling 
+-----------
+         0
+(1 row)
+
+it says, enrolling set to 0 , which means enrollment has not started yet
+CREATE FUNCTION
+CREATE TRIGGER
+testing insertion into course while enrollment has not started
+INSERT 0 1
+Insertion happened successfully
+
+now chaning toggle to 1, indiacting start of enrollment
+UPDATE 1
+display of enrollment status in courses
+ enrolling 
+-----------
+         1
+(1 row)
+
+it says, enrolling set to 1 , which means enrollment has began
+
+testing insertion into course while enrollment has began
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:488: ERROR:  Can not insert to course once enrollment starts
+CONTEXT:  PL/pgSQL function conditional_insert_on_course() line 4 at RAISE
+Insertion did not happen.
+no insert into course prerequisite if enroll exists
+no insert into course prerequisite if enroll started 
+
+setting enrollment toggle to 0 i.e. enrollment has not started.
+UPDATE 1
+display of enrollment status in courses
+ enrolling 
+-----------
+         0
+(1 row)
+
+
+it says, enrolling set to 0 , which means enrollment has not started yet
+CREATE FUNCTION
+CREATE TRIGGER
+testing insertion into enprerequisiteroll while enrollment has not started
+
+INSERT 0 1
+Insertion happened successfully
+
+now chaning toggle to 1, indiacting start of enrollment
+
+UPDATE 1
+display of enrollment status in courses
+ enrolling 
+-----------
+         1
+(1 row)
+
+it says, enrolling set to 1 , which means enrollment has began
+
+testing insertion into enroll while enrollment has began
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:533: ERROR:  Can not insert or update prerequisite once enrollment starts
+CONTEXT:  PL/pgSQL function conditional_insert_on_prerequisite() line 4 at RAISE
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:534: ERROR:  Can not insert or update prerequisite once enrollment starts
+CONTEXT:  PL/pgSQL function conditional_insert_on_prerequisite() line 4 at RAISE
+Insertion did not happen as enrollment has began and now we can not change anythong on prerequisite
+
+
+Question 2
+
+
+updating toggle to 0, indicating that the enrollment has not started
+
+UPDATE 1
+Inserting data into has taken to demonstrate question 2 working
+
+INSERT 0 1
+CREATE FUNCTION
+CREATE TRIGGER
+inserting sid 1001 in cno 105, this will show two things
+
+INSERT 0 1
+first that if someone satisfy all prerequisite then it will be inserted in enroll
+
+ sid  | cno 
+------+-----
+ 1001 | 105
+(1 row)
+
+second that if someone is enserted in enroll, the total in relation Course is updated to 1
+
+ cno |      cname       | total | max 
+-----+------------------+-------+-----
+ 105 | Machine learning |     1 |   5
+(1 row)
+
+those who has do not satisfy all prerequisite cant enroll
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/4/assignment4.sql:609: ERROR:  All prerequisites not satisfied
+CONTEXT:  PL/pgSQL function conditional_insert_on_enroll() line 11 at RAISE
+sid 1002 cant enroll as it doesnt satisfy all prerequisite
+
+now demonstrating the if a course is full the student will be sent to waitlist relation
+
+updating cno 107 to its one less than strength and then updating two students in 107 cno
+such that one will be enrolled and another will be put into waitlist.
+UPDATE 1
+
+ cno |    cname    | total | max 
+-----+-------------+-------+-----
+ 107 | Data mining |     4 |   5
+(1 row)
+
+
+inserting two new student in cno 107
+
+INSERT 0 1
+now check if the student is put in waitlist or not
+
+ sid  | cno | position 
+------+-----+----------
+ 1002 | 107 |        1
+(1 row)
+
+one student is placed in enroll and another student is placed in waitlist as the course is full
+
+CREATE FUNCTION
+CREATE TRIGGER
+updating the course 107 to full,and there is one person in waitlist in 107 course
+I will delete one person from enroll and the other person in waitlist should
+be moved to enroll table and deleted from waitlist table.
+DELETE 0
+the student 1002 has been deleted from enroll who was waitlisted in course 107, subsequently
+another student with sid 1001 who was waiting in course no 107 has been moved to enroll table
+
+if a student deleted with only SID then all courses where he is enrolled will be deleted
+but if the student specify both sid and cno to dropped from enroll, only that course will be removed from enroll.
+
+
+Question 3
+
+
+for this question i have made two relation experiment and T,experiment will always have only one column and it 
+will save the running average and running standard deviation in the relation
+T relation is only used as decoy to call trigger on the relation and then insert to experiment relation
+
+CREATE TABLE
+CREATE TABLE
+
+for its working i have made 4 variables that keeps the old and current value sof expected value E(T) and standard deviation V(T)
+ these variable are later used in the code to calculated the running expected value and standard delivation after each throw
+ after each throw the value is stored in experiment relation , and it is fetched from there again after next throw and put back
+
+CREATE FUNCTION
+CREATE TRIGGER
+
+in the runExperiment function i return a table, the values are directly taken from the experiment relation after the
+loop has ended, the runExperiment() function should directly display the output as expected
+ right now the runExperiment(1000) is being run for 1000 throw.
+CREATE FUNCTION
+  n   |         et         |        vt         
+------+--------------------+-------------------
+ 1000 | 10.492000000000015 | 2.049550004490612
+(1 row)
+
+You are now connected to database "postgres" as user "vibhas".
+DROP DATABASE
+postgres=# 
