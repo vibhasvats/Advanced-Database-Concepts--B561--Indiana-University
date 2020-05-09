@@ -1,0 +1,35 @@
+question 15 a
+
+select distinct bk.bookno, bk.title 
+from book bk, cites c1, cites c2 
+where c1.bookno = bk.bookno and
+	bk.bookno = c2.bookno and 
+	c1.citedbookno = 2001 and 
+	c1.citedbookno <> c2.citedbookno and 
+	exists (select 1 
+		   from book bk2 
+		   where bk2.bookno = c2.citedbookno and 
+		   bk2.price < 50);
+
+
+\qecho ''
+\qecho ''
+\qecho 'Question 6'
+\qecho ''
+\qecho ''
+--correct
+(select distinct bk1.bookno, bk1.title, bk1.price
+	from book bk1, book bk2 
+	where bk1.bookno <> bk2.bookno and 
+		bk1.price < bk2.price)
+except
+(select distinct bk3.bookno, bk3.title, bk3.price 
+from (select distinct bk1.bookno, bk1.title, bk1.price
+	from book bk1, book bk2 
+	where bk1.bookno <> bk2.bookno and 
+		bk1.price < bk2.price) bk3, (select distinct bk1.bookno, bk1.title, bk1.price
+									from book bk1, book bk2 
+									where bk1.bookno <> bk2.bookno and 
+										bk1.price < bk2.price) bk4 
+where bk3.bookno <> bk4.bookno and 
+	bk3.price < bk4.price);
