@@ -1,0 +1,233 @@
+problem 8.a;
+
+ bookno |        title        
+--------+---------------------
+   2003 | Networks
+   2005 | DiscreteMathematics
+   2009 | Calculus
+   2010 | Philosophy
+   4001 | LinearAlgebra
+(5 rows)
+
+problem 8.b;
+CREATE FUNCTION
+ sid  | sname | numberofbooksbought 
+------+-------+---------------------
+ 1005 | John  |                   4
+ 1008 | Emma  |                   4
+ 1011 | Nick  |                   4
+ 1012 | Eric  |                   2
+ 1013 | Lisa  |                   3
+ 1014 | Filip |                   3
+ 1020 | Ahmed |                   1
+(7 rows)
+
+problem 8.c;
+ sid  | sname 
+------+-------
+ 1015 | Dirk
+(1 row)
+
+problem 8.d;
+    major     | totalpriceofbooksbought 
+--------------+-------------------------
+ Anthropology |                     215
+ Biology      |                     480
+ CS           |                    2080
+ Math         |                    1345
+ Physics      |                     750
+ Psychology   |                     170
+ Theater      |                     180
+(7 rows)
+
+problem 8.e;
+  b1  |  b2  
+------+------
+ b1  |  b2  
+------+------
+ 2001 | 2002
+ 2001 | 2008
+ 2001 | 2013
+ 2002 | 2001
+ 2002 | 2008
+ 2002 | 2013
+ 2003 | 2009
+ 2003 | 2010
+ 2004 | 2005
+ 2004 | 4001
+ 2004 | 4002
+ 2005 | 2004
+ 2005 | 4001
+ 2005 | 4002
+ 2006 | 4003
+ 2008 | 2001
+ 2008 | 2002
+ 2008 | 2013
+ 2009 | 2003
+ 2009 | 2010
+ 2010 | 2003
+ 2010 | 2009
+ 2013 | 2001
+ 2013 | 2002
+ 2013 | 2008
+ 4001 | 2004
+ 4001 | 2005
+ 4001 | 4002
+ 4002 | 2004
+ 4002 | 2005
+ 4002 | 4001
+ 4003 | 2006
+(32 rows)
+
+
+problem 9;
+ sid  |   sname   
+------+-----------
+ 1001 | Jean
+ 1002 | Maria
+ 1003 | Anna
+ 1004 | Chin
+ 1005 | John
+ 1006 | Ryan
+ 1007 | Catherine
+ 1008 | Emma
+ 1009 | Jan
+ 1010 | Linda
+ 1011 | Nick
+ 1012 | Eric
+ 1013 | Lisa
+ 1014 | Filip
+ 1017 | Ellen
+ 1020 | Ahmed
+ 1021 | Kris
+(17 rows)
+
+problem 10
+ bookno |        title         
+--------+----------------------
+   2001 | Databases
+   2002 | OperatingSystems
+   2003 | Networks
+   2004 | AI
+   2007 | ProgrammingLanguages
+   2008 | DataScience
+   2011 | Anthropology
+   2012 | Geometry
+   2013 | RealAnalysis
+   3000 | MachineLearning
+   4001 | LinearAlgebra
+   4002 | MeasureTheory
+   4003 | OptimizationTheory
+(13 rows)
+
+problem 11
+ sid  | sname 
+------+-------
+ 1002 | Maria
+ 1003 | Anna
+ 1004 | Chin
+ 1005 | John
+ 1006 | Ryan
+ 1008 | Emma
+ 1009 | Jan
+ 1010 | Linda
+ 1011 | Nick
+ 1012 | Eric
+ 1013 | Lisa
+ 1014 | Filip
+ 1015 | Dirk
+ 1016 | Mary
+ 1017 | Ellen
+ 1020 | Ahmed
+(16 rows)
+
+problem 12;
+  b1  |  b2  
+------+------
+ 4001 | 4002
+ 4002 | 4001
+(2 rows)
+
+problem 13;
+ sid  | sname 
+------+-------
+ 1004 | Chin
+ 1006 | Ryan
+ 1011 | Nick
+ 1012 | Eric
+ 1013 | Lisa
+(5 rows)
+
+problem 14;
+ bookno |        title         
+--------+----------------------
+   2004 | AI
+   2005 | DiscreteMathematics
+   2006 | SQL
+   2007 | ProgrammingLanguages
+   2012 | Geometry
+   4001 | LinearAlgebra
+   4002 | MeasureTheory
+   4003 | OptimizationTheory
+(8 rows)
+
+problem 15;
+ sid  | sname 
+------+-------
+ 1021 | Kris
+(1 row)
+
+problem 16;
+  b1  |  b2  
+------+------
+ 2003 | 2001
+ 2003 | 2002
+ 2004 | 2002
+ 2004 | 2011
+ 2005 | 2001
+ 2005 | 2002
+ 2005 | 2003
+ 2005 | 2004
+ 2005 | 2006
+ 2005 | 2007
+ 2005 | 2008
+ 2005 | 2009
+ 2005 | 2010
+ 2005 | 2011
+ 2005 | 4001
+ 2005 | 4002
+ 2005 | 4003
+ 2006 | 2007
+ 2006 | 2008
+ 2006 | 2011
+ 2007 | 2011
+ 2009 | 2002
+ 2009 | 2007
+ 2009 | 2011
+ 2010 | 2001
+ 2010 | 2002
+ 2010 | 2003
+ 2010 | 2007
+ 2010 | 2008
+ 2010 | 2009
+ 2010 | 2011
+ 2013 | 2011
+ 3000 | 2002
+ 3000 | 2004
+ 3000 | 2011
+ 4001 | 2001
+ 4001 | 2002
+ 4001 | 2004
+ 4001 | 2008
+ 4001 | 2011
+ 4001 | 4002
+ 4002 | 2001
+ 4002 | 2002
+ 4002 | 2004
+ 4002 | 2008
+ 4002 | 2011
+ 4002 | 4001
+ 4003 | 2002
+ 4003 | 2011
+(49 rows)
+
