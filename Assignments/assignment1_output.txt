@@ -1,0 +1,485 @@
+CREATE DATABASE
+You are now connected to database "assignment1vkvats" as user "vibhas".
+
+Question 1.2.
+
+
+6 examples that illustrate how the presence or absence of primary and
+foreign keys affects insert and deletes in these relations
+
+
+Example 1: Inserting tuple with and without primary key
+
+
+inserting without primary key
+
+CREATE TABLE
+INSERT 0 3
+ sid | sname  | rating 
+-----+--------+--------
+  22 | Dustin |      7
+  22 | Dustin |      7
+  22 | Dustin |      7
+(3 rows)
+
+ Without primary key we can insert same tuple multiple times without any restriction.
+DROP TABLE
+
+inserting with primary key
+
+CREATE TABLE
+INSERT 0 1
+
+inserting same tuple again
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/1/assignment1.sql:47: ERROR:  duplicate key value violates unique constraint "sailor_pkey"
+DETAIL:  Key (sid)=(22) already exists.
+ sid | sname  | rating 
+-----+--------+--------
+  22 | Dustin |      7
+(1 row)
+
+There is only one tuple in the relation even when we tried to insert two same tuples. primary key do not allow multiple insertion with similar primary key values.
+
+DROP TABLE
+
+
+Example 2: Deleting tuple with and without primary key
+
+
+relation without primary key constraint
+
+CREATE TABLE
+INSERT 0 3
+ sid | sname  | rating 
+-----+--------+--------
+  22 | Dustin |      7
+  22 | Dustin |      7
+  22 | Dustin |      7
+(3 rows)
+
+
+there are 3 entires with same sid, now I try to delete one tuple of sid = 22
+DELETE 3
+ sid | sname | rating 
+-----+-------+--------
+(0 rows)
+
+all tuples with sid =22 are deleted, so we have no control over any specific tuple when deleting.
+DROP TABLE
+
+relation with primary key constraint
+CREATE TABLE
+INSERT 0 3
+ sid | sname  | rating 
+-----+--------+--------
+  22 | Dustin |      7
+  29 | Brutus |      1
+  31 | Lubber |      8
+(3 rows)
+
+Now with primary key, we wont have two tuple with all similar variable and we will be able to delete selectively
+DELETE 1
+ sid | sname  | rating 
+-----+--------+--------
+  29 | Brutus |      1
+  31 | Lubber |      8
+(2 rows)
+
+DROP TABLE
+
+
+Example 3: Inserting tuple with foreign key references
+
+
+when two relation are referenced with foreign key, tuple in relation with foreign key can only be inserted if it
+satisfies the foreign key constraint else it will not be inserted
+CREATE TABLE
+CREATE TABLE
+I made two tables, sailor and reserves, reserves has foreign key sid referenced to sailor.sid
+INSERT 0 2
+ sid | sname  | rating 
+-----+--------+--------
+  22 | Dustin |      7
+  29 | Brutus |      1
+(2 rows)
+
+inserted two entires in sailor with sid 22 and 29.
+
+trying to insert data in table reserves with sid already in sailor table
+INSERT 0 2
+ sid | bid |   day   
+-----+-----+---------
+  22 | 101 | Monday
+  22 | 102 | Tuesday
+(2 rows)
+
+
+trying to insert data in table reserves with sid not present in sailor table
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/1/assignment1.sql:138: ERROR:  insert or update on table "reserves" violates foreign key constraint "reserves_sid_fkey"
+DETAIL:  Key (sid)=(30) is not present in table "sailor".
+ sid | bid |   day   
+-----+-----+---------
+  22 | 101 | Monday
+  22 | 102 | Tuesday
+(2 rows)
+
+the insertion is rejected as it violates foreign key constraint
+DROP TABLE
+
+
+Example 4: Dropping table with foreign key reference when cascade is allowed and cascade is not allowed
+
+
+Dropping table when cascading is not allowed.
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+created three tables Sailor, Boat and Reserves
+
+Dropping tables when cascading is not allowed
+              Table "public.reserves"
+ Column |  Type   | Collation | Nullable | Default 
+--------+---------+-----------+----------+---------
+ sid    | integer |           | not null | 
+ bid    | integer |           | not null | 
+ day    | text    |           |          | 
+Indexes:
+    "reserves_pkey" PRIMARY KEY, btree (sid, bid)
+Foreign-key constraints:
+    "reserves_bid_fkey" FOREIGN KEY (bid) REFERENCES boat(bid)
+    "reserves_sid_fkey" FOREIGN KEY (sid) REFERENCES sailor(sid)
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/1/assignment1.sql:177: ERROR:  cannot drop table sailor because other objects depend on it
+DETAIL:  constraint reserves_sid_fkey on table reserves depends on table sailor
+HINT:  Use DROP ... CASCADE to drop the dependent objects too.
+The description shows that the foreign key restriction did not allow Sailor to be dropped.
+DROP TABLE
+
+dropping table when cascading is allowed
+CREATE TABLE
+created three tables Reserves with cascading allowed.
+              Table "public.reserves"
+ Column |  Type   | Collation | Nullable | Default 
+--------+---------+-----------+----------+---------
+ sid    | integer |           | not null | 
+ bid    | integer |           | not null | 
+ day    | text    |           |          | 
+Indexes:
+    "reserves_pkey" PRIMARY KEY, btree (sid, bid)
+Foreign-key constraints:
+    "reserves_bid_fkey" FOREIGN KEY (bid) REFERENCES boat(bid) ON DELETE CASCADE
+    "reserves_sid_fkey" FOREIGN KEY (sid) REFERENCES sailor(sid) ON DELETE CASCADE
+
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/1/assignment1.sql:195: NOTICE:  drop cascades to constraint reserves_sid_fkey on table reserves
+DROP TABLE
+              Table "public.reserves"
+ Column |  Type   | Collation | Nullable | Default 
+--------+---------+-----------+----------+---------
+ sid    | integer |           | not null | 
+ bid    | integer |           | not null | 
+ day    | text    |           |          | 
+Indexes:
+    "reserves_pkey" PRIMARY KEY, btree (sid, bid)
+Foreign-key constraints:
+    "reserves_bid_fkey" FOREIGN KEY (bid) REFERENCES boat(bid) ON DELETE CASCADE
+
+The description shows that the foreign key restriction are removed when we try to drop Sailor table.
+DROP TABLE
+
+
+Example 5: Deleting tuple without foreign key when cascading is allowed
+
+
+We can delete tuple with CASCADE command when cascading is allowed.
+creating two table Sailor and Reserves in which cascading is allowed
+CREATE TABLE
+CREATE TABLE
+INSERT 0 2
+ sid | sname  | rating 
+-----+--------+--------
+  22 | Dustin |      7
+  29 | Brutus |      1
+(2 rows)
+
+inserted two entires in sailor with sid 22 and 29.
+
+trying to insert data in table reserves table
+INSERT 0 2
+ sid | bid |   day   
+-----+-----+---------
+  22 | 101 | Monday
+  29 | 102 | Tuesday
+(2 rows)
+
+Deleting from sailor the entry with sid = 29. It will also be deleted from Reserves table automatically
+DELETE 1
+ sid | sname  | rating 
+-----+--------+--------
+  22 | Dustin |      7
+(1 row)
+
+ sid | bid |  day   
+-----+-----+--------
+  22 | 101 | Monday
+(1 row)
+
+The entry with sid 29 is deleted from both tables.
+DROP TABLE
+
+
+Example 6: Deleting tuple without foreign key when deletion is restricted.
+
+
+We can not delete tuple with CASCADE command when cascading is RESTRICTED.
+creating two table Sailor and Reserves in which cascading is restricted
+CREATE TABLE
+CREATE TABLE
+INSERT 0 2
+ sid | sname  | rating 
+-----+--------+--------
+  22 | Dustin |      7
+  29 | Brutus |      1
+(2 rows)
+
+inserted two entires in sailor with sid 22 and 29.
+
+trying to insert data in table reserves table
+INSERT 0 2
+ sid | bid |   day   
+-----+-----+---------
+  22 | 101 | Monday
+  29 | 102 | Tuesday
+(2 rows)
+
+Deleting from sailor the entry with sid = 29. It not be allowed to be deleted from tables
+psql:/Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/1/assignment1.sql:279: ERROR:  update or delete on table "sailor" violates foreign key constraint "reserves_sid_fkey" on table "reserves"
+DETAIL:  Key (sid)=(29) is still referenced from table "reserves".
+ sid | sname  | rating 
+-----+--------+--------
+  22 | Dustin |      7
+  29 | Brutus |      1
+(2 rows)
+
+ sid | bid |   day   
+-----+-----+---------
+  22 | 101 | Monday
+  29 | 102 | Tuesday
+(2 rows)
+
+The entry with sid 29 is not deleted form both tables.
+DROP TABLE
+
+
+
+Question 1.1
+
+
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 11
+INSERT 0 5
+INSERT 0 10
+Sailor
+ sid |  sname  | rating 
+-----+---------+--------
+  22 | Dustin  |      7
+  29 | Brutus  |      1
+  31 | Lubber  |      8
+  32 | Andy    |      8
+  58 | Rusty   |     10
+  64 | Horatio |      7
+  71 | Zorba   |     10
+  75 | David   |      8
+  74 | Horatio |      9
+  85 | Art     |      3
+  95 | Bob     |      3
+(11 rows)
+
+Boat
+ bid |    bname     | color 
+-----+--------------+-------
+ 101 | Interlake    | blue
+ 102 | Sunset       | red
+ 103 | Clipper      | green
+ 104 | Marine       | red
+ 105 | Indianapolis | blue
+(5 rows)
+
+Reserves
+ sid | bid |    day    
+-----+-----+-----------
+  22 | 101 | Monday
+  22 | 102 | Tuesday
+  22 | 103 | Wednesday
+  22 | 105 | Wednesday
+  31 | 102 | Thursday
+  31 | 103 | Friday
+  31 | 104 | Saturday
+  64 | 101 | Sunday
+  64 | 102 | Monday
+  74 | 102 | Saturday
+(10 rows)
+
+
+
+Question 2.1
+
+
+ sid | rating 
+-----+--------
+  22 |      7
+  29 |      1
+  31 |      8
+  32 |      8
+  58 |     10
+  64 |      7
+  71 |     10
+  75 |      8
+  74 |      9
+  85 |      3
+  95 |      3
+(11 rows)
+
+
+
+Question 2.2
+
+
+ sid |  sname  | rating 
+-----+---------+--------
+  22 | Dustin  |      7
+  64 | Horatio |      7
+  85 | Art     |      3
+  95 | Bob     |      3
+(4 rows)
+
+
+
+Question 2.3
+
+
+ bid |  bname  | color 
+-----+---------+-------
+ 103 | Clipper | green
+(1 row)
+
+
+
+Question 2.4
+
+
+ bid |   bname   
+-----+-----------
+ 104 | Marine
+ 101 | Interlake
+(2 rows)
+
+
+
+Question 2.5
+
+
+ sid 
+-----
+  31
+  22
+(2 rows)
+
+
+
+Question 2.6
+
+
+ sid |  sname  
+-----+---------
+  22 | Dustin
+  31 | Lubber
+  64 | Horatio
+(3 rows)
+
+
+
+Question 2.7
+
+
+ sid | sid 
+-----+-----
+  22 |  31
+  22 |  64
+  22 |  74
+  31 |  22
+  31 |  64
+  31 |  74
+  64 |  22
+  64 |  31
+  64 |  74
+  74 |  22
+  74 |  31
+  74 |  64
+(12 rows)
+
+
+
+Question 2.8
+
+
+ sid 
+-----
+  29
+  31
+  32
+  58
+  71
+  75
+  74
+  85
+  95
+(9 rows)
+
+
+
+Question 2.9
+
+
+ sid | bid 
+-----+-----
+  22 | 101
+  22 | 103
+  22 | 105
+  31 | 103
+  64 | 101
+(5 rows)
+
+
+
+Question 2.10
+
+
+ bid 
+-----
+ 104
+ 105
+(2 rows)
+
+
+
+Question 2.11
+
+
+ sid 
+-----
+  75
+  58
+  95
+  74
+  29
+  85
+  32
+  71
+  64
+(9 rows)
+
+You are now connected to database "postgres" as user "vibhas".
+DROP DATABASE
