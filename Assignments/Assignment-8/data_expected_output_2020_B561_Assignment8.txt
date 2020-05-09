@@ -1,0 +1,452 @@
+-- Problem 1  Tree distance
+
+CREATE TABLE Tree(parent int, child int);
+INSERT INTO Tree VALUES (1,2), (1,3), (1,4), (2,5), (2,6), (3,7), (5,8), (7,9), (9,10);
+
+TABLE Tree;
+ parent | child 
+--------+-------
+      1 |     2
+      1 |     3
+      1 |     4
+      2 |     5
+      2 |     6
+      3 |     7
+      5 |     8
+      7 |     9
+      9 |    10
+(9 rows)
+
+-- Here are the distance between all pairs of different vertices.
+-- Here "V" is a view which computes all the vertices in Tree.
+
+SELECT v1.vertex AS v1, v2.vertex as v2, distance(v1.vertex, v2.vertex) as distance
+FROM   V v1, V v2 
+WHERE  v1.vertex != v2.vertex ORDER BY 3,1,2;
+
+/*
+ v1 | v2 | distance 
+----+----+----------
+  1 |  2 |        1
+  1 |  3 |        1
+  1 |  4 |        1
+  2 |  1 |        1
+  2 |  5 |        1
+  2 |  6 |        1
+  3 |  1 |        1
+  3 |  7 |        1
+  4 |  1 |        1
+  5 |  2 |        1
+  5 |  8 |        1
+  6 |  2 |        1
+  7 |  3 |        1
+  7 |  9 |        1
+  8 |  5 |        1
+  9 |  7 |        1
+  9 | 10 |        1
+ 10 |  9 |        1
+  1 |  5 |        2
+  1 |  6 |        2
+  1 |  7 |        2
+  2 |  3 |        2
+  2 |  4 |        2
+  2 |  8 |        2
+  3 |  2 |        2
+  3 |  4 |        2
+  3 |  9 |        2
+  4 |  2 |        2
+  4 |  3 |        2
+  5 |  1 |        2
+  5 |  6 |        2
+  6 |  1 |        2
+  6 |  5 |        2
+  7 |  1 |        2
+  7 | 10 |        2
+  8 |  2 |        2
+  9 |  3 |        2
+ 10 |  7 |        2
+  1 |  8 |        3
+  1 |  9 |        3
+  2 |  7 |        3
+  3 |  5 |        3
+  3 |  6 |        3
+  3 | 10 |        3
+  4 |  5 |        3
+  4 |  6 |        3
+  4 |  7 |        3
+  5 |  3 |        3
+  5 |  4 |        3
+  6 |  3 |        3
+  6 |  4 |        3
+  6 |  8 |        3
+  7 |  2 |        3
+  7 |  4 |        3
+  8 |  1 |        3
+  8 |  6 |        3
+  9 |  1 |        3
+ 10 |  3 |        3
+  1 | 10 |        4
+  2 |  9 |        4
+  3 |  8 |        4
+  4 |  8 |        4
+  4 |  9 |        4
+  5 |  7 |        4
+  6 |  7 |        4
+  7 |  5 |        4
+  7 |  6 |        4
+  8 |  3 |        4
+  8 |  4 |        4
+  9 |  2 |        4
+  9 |  4 |        4
+ 10 |  1 |        4
+  2 | 10 |        5
+  4 | 10 |        5
+  5 |  9 |        5
+  6 |  9 |        5
+  7 |  8 |        5
+  8 |  7 |        5
+  9 |  5 |        5
+  9 |  6 |        5
+ 10 |  2 |        5
+ 10 |  4 |        5
+  5 | 10 |        6
+  6 | 10 |        6
+  8 |  9 |        6
+  9 |  8 |        6
+ 10 |  5 |        6
+ 10 |  6 |        6
+  8 | 10 |        7
+ 10 |  8 |        7
+(90 rows)
+*/
+
+-- Problem 2  Topological sort of a connected directed acyclic graph
+
+CREATE TABLE Graph(source int, target int)
+DELETE FROM Graph;
+
+INSERT INTO Graph VALUES 
+(      1 ,      2),
+(      1 ,      3),
+(      1 ,      4),
+(      3 ,      4),
+(      2 ,      5),
+(      3 ,      5),
+(      5 ,      4),
+(      3 ,      6),
+(      4 ,      6);
+
+table graph;
+ source | target 
+--------+--------
+      1 |      2
+      1 |      3
+      1 |      4
+      3 |      4
+      2 |      5
+      3 |      5
+      5 |      4
+      3 |      6
+      4 |      6
+(9 rows)
+
+-- The following are some possible topological sorts
+select * from topologicalsort();
+ index | vertex 
+-------+--------
+     1 |      1
+     2 |      3
+     3 |      2
+     4 |      5
+     5 |      4
+     6 |      6
+(6 rows)
+
+select * from topologicalsort();
+ index | vertex 
+-------+--------
+     1 |      1
+     2 |      2
+     3 |      3
+     4 |      5
+     5 |      4
+     6 |      6
+(6 rows)
+
+
+-- Problem 3
+-- Bill of materials problem
+CREATE TABLE IF NOT EXISTS partSubPart(pid INTEGER, sid INTEGER, quantity INTEGER);
+DELETE FROM partSubPart;
+
+INSERT INTO partSubPart VALUES
+(   1,   2,        4),
+(   1,   3,        1),
+(   3,   4,        1),
+(   3,   5,        2),
+(   3,   6,        3),
+(   6,   7,        2),
+(   6,   8,        3);
+
+
+CREATE TABLE IF NOT EXISTS basicPart(pid INTEGER, weight INTEGER);
+DELETE FROM basicPart;
+
+INSERT INTO basicPart VALUES
+(   2,      5),
+(   4,     50),
+(   5,      3),
+(   7,      6),
+(   8,     10);
+
+select * from partsubpart;
+
+pid | sid | quantity 
+-----+-----+----------
+   1 |   2 |        4
+   1 |   3 |        1
+   3 |   4 |        1
+   3 |   5 |        2
+   3 |   6 |        3
+   6 |   7 |        2
+   6 |   8 |        3
+(7 rows)
+
+select * from basicpart;
+ pid | weight 
+-----+--------
+   2 |      5
+   4 |     50
+   5 |      3
+   7 |      6
+   8 |     10
+(5 rows)
+
+
+-- The following query computes the aggregated weight of each part
+select distinct pid, AggregatedWeight(pid)
+from   (select pid from partSubPart union select pid from basicPart) q order by 1;
+
+/*
+ pid | aggregatedweight 
+-----+------------------
+   1 |              202
+   2 |                5
+   3 |              182
+   4 |               50
+   5 |                3
+   6 |               42
+   7 |                6
+   8 |               10
+(8 rows)
+*/
+
+
+-- Problem 4
+-- Frequent Itemset Problem
+
+create table if not exists document (doc text,  words text[]);
+delete from document;
+
+insert into document values 
+('d7', '{C,B,A}'),
+('d1', '{A,B,C}'),
+('d8', '{B,A}'),
+('d4', '{B,B,A,D}'),
+('d2', '{B,C,D}'),
+('d6', '{A,D,G}'),
+('d3', '{A,E}'),
+('d5', '{E,F}');
+
+ table document;
+ doc |   words   
+-----+-----------
+ d7  | {C,B,A}
+ d1  | {A,B,C}
+ d8  | {B,A}
+ d4  | {B,B,A,D}
+ d2  | {B,C,D}
+ d6  | {A,D,G}
+ d3  | {A,E}
+ d5  | {E,F}
+(8 rows)
+
+
+-- We now consider the frequent sets for various thresholds.
+select frequentSets(1);
+
+/*
+ frequentsets 
+--------------
+ {}
+ {E}
+ {G}
+ {C}
+ {A}
+ {F}
+ {B}
+ {D}
+ {A,E}
+ {A,C}
+ {C,D}
+ {E,F}
+ {B,C}
+ {D,G}
+ {A,B}
+ {A,D}
+ {A,G}
+ {B,D}
+ {A,D,G}
+ {A,B,D}
+ {B,C,D}
+ {A,B,C}
+(22 rows)
+*/
+
+select frequentsets(2);
+
+/*
+ frequentsets 
+--------------
+ {}
+ {E}
+ {C}
+ {A}
+ {B}
+ {D}
+ {A,C}
+ {B,C}
+ {A,B}
+ {A,D}
+ {B,D}
+ {A,B,C}
+(12 rows)
+*/
+
+select frequentsets(3);
+
+/*
+ frequentsets 
+--------------
+ {}
+ {C}
+ {A}
+ {B}
+ {D}
+ {B,C}
+ {A,B}
+(7 rows)
+*/
+
+
+select frequentsets(4);
+
+/*
+ frequentsets 
+--------------
+ {}
+ {A}
+ {B}
+ {A,B}
+(4 rows)
+*/
+
+select frequentsets(5);
+
+/*
+ frequentsets 
+--------------
+ {}
+ {A}
+ {B}
+(3 rows)
+*/
+
+select frequentsets(6);
+
+/*
+ frequentsets 
+--------------
+ {}
+ {A}
+(2 rows)
+*/
+
+select frequentsets(7);
+
+/*
+ frequentsets 
+--------------
+ {}
+(1 row)
+*/
+
+
+-- Problem 5 
+-- K-means clustering
+-- Create the data set table of points that are to be used to create the clusters
+CREATE TABLE Points (PId INTEGER, X FLOAT, Y FLOAT);
+
+
+INSERT INTO Points VALUES
+(   1 , 0 , 0),
+(   2 , 2 , 0),
+(   3 , 4 , 0),
+(   4 , 6 , 0),
+(   5 , 0 , 2),
+(   6 , 2 , 2),
+(   7 , 4 , 2),
+(   8 , 6 , 2),
+(   9 , 0 , 4),
+(  10 , 2 , 4),
+(  11 , 4 , 4),
+(  12 , 6 , 4),
+(  13 , 0 , 6),
+(  14 , 2 , 6),
+(  15 , 4 , 6),
+(  16 , 6 , 6),
+(  17 , 1 , 1),
+(  18 , 5 , 1),
+(  19 , 1 , 5),
+(  20 , 5 , 5);
+
+select * from points order by 1;;
+
+ pid | x | y 
+-----+---+---
+   1 | 0 | 0
+   2 | 2 | 0
+   3 | 4 | 0
+   4 | 6 | 0
+   5 | 0 | 2
+   6 | 2 | 2
+   7 | 4 | 2
+   8 | 6 | 2
+   9 | 0 | 4
+  10 | 2 | 4
+  11 | 4 | 4
+  12 | 6 | 4
+  13 | 0 | 6
+  14 | 2 | 6
+  15 | 4 | 6
+  16 | 6 | 6
+  17 | 1 | 1
+  18 | 5 | 1
+  19 | 1 | 5
+  20 | 5 | 5
+(20 rows)
+
+
+-- After 1000 iterations
+
+select * from kmeans(4);
+ cid |         x         |       y        
+-----+-------------------+----------------
+   5 | 0.999199199199199 |              1
+   6 |   4.9968031968032 |              1
+  10 |    4.999400119976 | 4.999800039992
+  19 | 0.999799959991998 | 5.000200040008
+(4 rows)
+
+
+

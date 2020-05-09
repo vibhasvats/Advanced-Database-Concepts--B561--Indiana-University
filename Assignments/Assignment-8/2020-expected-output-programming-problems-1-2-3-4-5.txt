@@ -1,0 +1,213 @@
+-- Problem 1
+
+INSERT INTO Tree VALUES (1,2), (1,3), (1,4), (2,5), (2,6), (3,7), (5,8), (7,9), (9,10);
+
+table tree;
+ parent | child 
+--------+-------
+      1 |     2
+      1 |     3
+      1 |     4
+      2 |     5
+      2 |     6
+      3 |     7
+      5 |     8
+      7 |     9
+      9 |    10
+(9 rows)
+
+SELECT v1.vertex AS v1, v2.vertex as v2, distance(v1.vertex, v2.vertex) as distance
+FROM   V v1, V v2
+WHERE  v1.vertex != v2.vertex ORDER BY 3,1,2;
+
+
+ v1 | v2 | distance 
+----+----+----------
+  1 |  2 |        1
+  1 |  3 |        1
+  1 |  4 |        1
+  2 |  1 |        1
+  2 |  5 |        1
+  2 |  6 |        1
+  3 |  1 |        1
+  3 |  7 |        1
+  4 |  1 |        1
+  5 |  2 |        1
+  5 |  8 |        1
+  6 |  2 |        1
+  7 |  3 |        1
+  7 |  9 |        1
+  8 |  5 |        1
+  9 |  7 |        1
+  9 | 10 |        1
+ 10 |  9 |        1
+  1 |  5 |        2
+  1 |  6 |        2
+  1 |  7 |        2
+  2 |  3 |        2
+  2 |  4 |        2
+  2 |  8 |        2
+  3 |  2 |        2
+  3 |  4 |        2
+  3 |  9 |        2
+  4 |  2 |        2
+  4 |  3 |        2
+  5 |  1 |        2
+  5 |  6 |        2
+  6 |  1 |        2
+  6 |  5 |        2
+  7 |  1 |        2
+  7 | 10 |        2
+  8 |  2 |        2
+  9 |  3 |        2
+ 10 |  7 |        2
+  1 |  8 |        3
+  1 |  9 |        3
+  2 |  7 |        3
+  3 |  5 |        3
+  3 |  6 |        3
+  3 | 10 |        3
+  4 |  5 |        3
+  4 |  6 |        3
+  4 |  7 |        3
+  5 |  3 |        3
+  5 |  4 |        3
+  6 |  3 |        3
+  6 |  4 |        3
+  6 |  8 |        3
+  7 |  2 |        3
+  7 |  4 |        3
+  8 |  1 |        3
+  8 |  6 |        3
+  9 |  1 |        3
+ 10 |  3 |        3
+  1 | 10 |        4
+  2 |  9 |        4
+  3 |  8 |        4
+  4 |  8 |        4
+  4 |  9 |        4
+  5 |  7 |        4
+  6 |  7 |        4
+  7 |  5 |        4
+  7 |  6 |        4
+  8 |  3 |        4
+  8 |  4 |        4
+  9 |  2 |        4
+  9 |  4 |        4
+ 10 |  1 |        4
+  2 | 10 |        5
+  4 | 10 |        5
+  5 |  9 |        5
+  6 |  9 |        5
+  7 |  8 |        5
+  8 |  7 |        5
+  9 |  5 |        5
+  9 |  6 |        5
+ 10 |  2 |        5
+ 10 |  4 |        5
+  5 | 10 |        6
+  6 | 10 |        6
+  8 |  9 |        6
+  9 |  8 |        6
+ 10 |  5 |        6
+ 10 |  6 |        6
+  8 | 10 |        7
+ 10 |  8 |        7
+(90 rows)
+
+-- Problem 2
+
+Example 1
+---------
+table graph;
+ source | target 
+--------+--------
+      1 |      2
+      1 |      3
+      1 |      4
+      1 |      5
+(4 rows)
+
+select topologicalSort();
+
+select * from topologicalSort();
+ index | vertex 
+-------+--------
+     1 |      1
+     2 |      5
+     3 |      2
+     4 |      4
+     5 |      3
+(5 rows)
+
+Another possible topological sort for this data is
+
+select * from topologicalSort();
+ index | vertex 
+-------+--------
+     1 |      1
+     2 |      4
+     3 |      2
+     4 |      5
+     5 |      3
+(5 rows)
+
+In fact there are 4! (4 factorial) possible ordering for this data
+
+-- Example 2
+
+insert into graph values (1,2), (2,3), (3, 4), (4,5);
+
+select * from topologicalSort();
+ index | vertex 
+-------+--------
+     1 |      1
+     2 |      2
+     3 |      3
+     4 |      4
+     5 |      5
+(5 rows)
+
+This is the only possible topological sort for this data.
+
+-- Example 3
+
+insert into graph values (1,2), (1,3), (1,4), (3,4), (2,5), (3,5), (5,4), (3,6), (4,6);
+
+table graph;
+ source | target 
+--------+--------
+      1 |      2
+      1 |      3
+      1 |      4
+      3 |      4
+      2 |      5
+      3 |      5
+      5 |      4
+      3 |      6
+      4 |      6
+(9 rows)
+
+select * from topologicalSort();
+ index | vertex 
+-------+--------
+     1 |      1
+     2 |      3
+     3 |      2
+     4 |      5
+     5 |      4
+     6 |      6
+(6 rows)
+
+Another possible ordering is
+
+select * from topologicalSort();
+ index | vertex 
+-------+--------
+     1 |      1
+     2 |      2
+     3 |      3
+     4 |      5
+     5 |      4
+     6 |      6
+
