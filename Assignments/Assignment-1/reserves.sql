@@ -1,0 +1,10 @@
+INSERT INTO reserves VALUES(22,	101,	'Monday');
+INSERT INTO reserves VALUES(22,	102,	'Tuesday');
+INSERT INTO reserves VALUES(22,	103,	'Wednesday');
+INSERT INTO reserves VALUES(22,	105,	'Wednesday');
+INSERT INTO reserves VALUES(31,	102,	'Thursday');
+INSERT INTO reserves VALUES(31,	103,	'Friday');
+INSERT INTO reserves VALUES(31, 104,	'Saturday');
+INSERT INTO reserves VALUES(64,	101,	'Sunday');
+INSERT INTO reserves VALUES(64,	102,	'Monday');
+INSERT INTO reserves VALUES(74,	102,	'Saturday');
