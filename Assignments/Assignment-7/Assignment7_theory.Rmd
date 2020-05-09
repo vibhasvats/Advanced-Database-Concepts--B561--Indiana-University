@@ -1,0 +1,87 @@
+---
+title: "Assignment7_theory"
+author: "Vibhas Vats"
+date: "4/19/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Graph Database 
+
+### Question 6.A
+
+The ER diagram has been made with following assumptions:  
+- All relationships are many-to-many.  
+- A Student can buy multiple books.  
+- A Student can enroll in multiple courses.  
+- Student can have multiple majors.   
+- Book can cite multiple books.  
+Major is an entity with an attribute major, majors_in is a relation that connects Student and Major.   
+
+![Entity-Relationship Diagram ](`r here::here("Desktop/ER.png")`){#id .class width=100% height=100%}
+
+\newpage
+
+### Question 6.B
+
+![Property Graph](`r here::here("Desktop/property.png")`){#id .class width=90% height=90%}
+
+
+### Question 7.a
+
+MATCH (:Student )-[r]->()   
+RETURN type(r)  
+
+### Question 7.b
+
+MATCH(s: student{sname: 'John'}) - [:buys]->(b:book)  
+where b.price >=50  
+return s  
+
+### Question 7.c
+
+MATCH(s:student) -[:buys]-> (b1:book),  
+(b1) -[:cites]-> (b2:book)  
+where b2.price >= 50  
+return s  
+
+### Question 7.d
+
+MATCH (b1: Book) - [:cites*] -> (b2:book)  
+where b1.price >50  
+return b2  
+ 
+### Question 7.e
+
+MATCH (b:book)<-[:buys]-(s:student),  
+(s)-[:majors_in]->(m1:Major{major:'Math'}),  
+(s)-[:majors_in]->(m2:Major{major:'CS'})  
+return b, count(s)  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
