@@ -1,0 +1,277 @@
+ 
+postgres=# \i /Users/vibhas/Desktop/MSDS/Spring_2020/2AdvancedDatabaseConcepts/ADC_assignments/5/assignment5.sql
+CREATE DATABASE
+You are now connected to database "assignment5vkvats" as user "vibhas".
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 18
+INSERT 0 14
+INSERT 0 74
+INSERT 0 10
+INSERT 0 19
+
+1.c
+
+ bookno | title 
+--------+-------
+(0 rows)
+
+
+2.a
+
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 3
+INSERT 0 3
+INSERT 0 3
+ x  
+----
+ 11
+ 12
+ 13
+(3 rows)
+
+  x  
+-----
+ 101
+ 201
+ 301
+(3 rows)
+
+  x   
+------
+ -101
+ -201
+ -301
+(3 rows)
+
+There are tuples in relation F so the output should be relation E1 here
+  x  
+-----
+ 101
+ 201
+ 301
+(3 rows)
+
+Now I will delete the values from F then the output should be relation E2
+DELETE 3
+  x   
+------
+ -301
+ -201
+ -101
+(3 rows)
+
+DROP TABLE
+
+2.b
+
+CREATE TABLE
+INSERT 0 3
+I have inserted some values in relation A, so the output should be TRUE
+ aisnotempty 
+-------------
+ t
+(1 row)
+
+DELETE 3
+I have deleted everything from relation A so the output should be FALSE
+ aisnotempty 
+-------------
+ f
+(1 row)
+
+
+7
+
+ sid  |   sname   
+------+-----------
+ 1002 | Maria
+ 1004 | Chin
+ 1006 | Ryan
+ 1007 | Catherine
+ 1011 | Nick
+ 1012 | Eric
+ 1013 | Lisa
+(7 rows)
+
+
+8
+
+ bookno |   title   | price 
+--------+-----------+-------
+   2001 | Databases |    40
+   2003 | Networks  |    20
+   2012 | Geometry  |    80
+(3 rows)
+
+
+9
+
+ bookno |        title        | price 
+--------+---------------------+-------
+   2003 | Networks            |    20
+   2004 | AI                  |    45
+   2005 | DiscreteMathematics |    20
+   2006 | SQL                 |    25
+   2008 | DataScience         |    50
+   2010 | Philosophy          |    25
+   3000 | MachineLearning     |    40
+(7 rows)
+
+
+10
+
+ sid  |   sname   |    title     | price 
+------+-----------+--------------+-------
+ 1001 | Jean      | Anthropology |    50
+ 1002 | Maria     | Geometry     |    80
+ 1003 | Anna      | Geometry     |    80
+ 1004 | Chin      | Geometry     |    80
+ 1005 | John      | Geometry     |    80
+ 1006 | Ryan      | Geometry     |    80
+ 1007 | Catherine | Geometry     |    80
+ 1008 | Emma      | Geometry     |    80
+ 1009 | Jan       | Geometry     |    80
+ 1010 | Linda     | Geometry     |    80
+ 1011 | Nick      | Geometry     |    80
+ 1012 | Eric      | Geometry     |    80
+ 1013 | Lisa      | Geometry     |    80
+ 1014 | Filip     | Geometry     |    80
+ 1017 | Ellen     | Geometry     |    80
+ 1020 | Ahmed     | Geometry     |    80
+(16 rows)
+
+
+11
+
+ bookno |    title     
+--------+--------------
+   2008 | DataScience
+   2011 | Anthropology
+(2 rows)
+
+
+12
+
+ bookno |      title       | price 
+--------+------------------+-------
+   2001 | Databases        |    40
+   2002 | OperatingSystems |    25
+   2003 | Networks         |    20
+   2008 | DataScience      |    50
+   2012 | Geometry         |    80
+(5 rows)
+
+
+13
+
+ sid  | sname 
+------+-------
+ 1012 | Eric
+ 1014 | Filip
+(2 rows)
+
+
+14
+
+ bookno |      title       
+--------+------------------
+   2002 | OperatingSystems
+   2011 | Anthropology
+   2012 | Geometry
+(3 rows)
+
+
+15
+
+ sid  |   sname   
+------+-----------
+ 1001 | Jean
+ 1002 | Maria
+ 1003 | Anna
+ 1004 | Chin
+ 1005 | John
+ 1006 | Ryan
+ 1007 | Catherine
+ 1008 | Emma
+ 1009 | Jan
+ 1010 | Linda
+ 1011 | Nick
+ 1015 | Dirk
+ 1016 | Mary
+ 1017 | Ellen
+(14 rows)
+
+
+16
+
+  s1  |  s2  
+------+------
+ 1001 | 1002
+ 1001 | 1003
+ 1001 | 1007
+ 1001 | 1008
+ 1001 | 1011
+ 1002 | 1001
+ 1002 | 1003
+ 1002 | 1004
+ 1002 | 1006
+ 1002 | 1007
+ 1002 | 1011
+ 1002 | 1012
+ 1002 | 1013
+ 1003 | 1001
+ 1003 | 1002
+ 1003 | 1011
+ 1004 | 1002
+ 1004 | 1007
+ 1004 | 1011
+ 1004 | 1012
+ 1004 | 1013
+ 1006 | 1002
+ 1006 | 1007
+ 1006 | 1011
+ 1006 | 1012
+ 1006 | 1013
+ 1007 | 1001
+ 1007 | 1002
+ 1007 | 1004
+ 1007 | 1006
+ 1007 | 1008
+ 1007 | 1011
+ 1007 | 1012
+ 1007 | 1013
+ 1008 | 1001
+ 1008 | 1007
+ 1009 | 1010
+ 1010 | 1009
+ 1011 | 1001
+ 1011 | 1002
+ 1011 | 1003
+ 1011 | 1004
+ 1011 | 1006
+ 1011 | 1007
+ 1011 | 1012
+ 1011 | 1013
+ 1012 | 1002
+ 1012 | 1004
+ 1012 | 1006
+ 1012 | 1007
+ 1012 | 1011
+ 1012 | 1013
+ 1013 | 1002
+ 1013 | 1004
+ 1013 | 1006
+ 1013 | 1007
+ 1013 | 1011
+ 1013 | 1012
+(58 rows)
+
+You are now connected to database "postgres" as user "vibhas".
+DROP DATABASE
+postgres=# 

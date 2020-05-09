@@ -1,0 +1,298 @@
+---
+title: "Assignment5_Theory_Part"
+author: "vkvats"
+date: "3/3/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# part 1:
+## Notation:  
+Student $\rightarrow$**S**  
+Book$\rightarrow$ **B**  
+Enroll $\rightarrow$**E**  
+Buys $\rightarrow$**T**  
+Major $\rightarrow$**M**  
+
+**Note:**   
+- Temporary views are given abbreviated names indicated by arrow "$\rightarrow$" infront of the name of temporary views. 
+
+### Question 1.a
+
+All-but-two: To formulate this, we can find at-least-2 condition then subtract at-least-3 condition from it.  
+The idea is to select all those values which has a count of 2 in the right ear (NOT ALL condition) of the two set venn diagram. Once we have the expression for right ear (NOT ALL condition) of the venn diagram, we can use the following generalised SQL query from a targer relation E would be: 
+
+right ear of the venn diagram is calculated as:  
+For any relation P, Q and R, we can calculate the right ear as 
+$E \rightarrow e_1, e_2, e_3 : R \ominus P$
+
+    SELECT q.*
+    FROM (SELECT e1.*    
+        FROM E e1 JOIN E e2 ON (e1.A_1 theta e2.A_1 AND ... AND e1.A_n theta e2.A_n)
+        EXCEPT
+        select e3.*
+        FROM E e1 JOIN E e2
+          ON (e1.A_1 theta e2.A_1 AND ... AND e1.A_n theta e2.A_n) JOIN E e3
+          ON (e1.A_1 theta e3.A_1 AND... AND e1.A_n theta e3.A_n)) q;  
+Theta denotes any operator.
+
+**Generalized RA expression:**   
+$E \rightarrow E_1, E_2, E_3 :$ represents the right ear of the two set venn diagram.
+
+$\pi_{e_1}(\pi_{e_1}(E_1 \bowtie_{e_1.A_1 \theta e2.A_1 \land .. \land e_1.A_n \theta e_2.A_n} E_2)-$  
+$\pi_{e_3}(E_1 \bowtie_{e_1.A_1 \theta e2.A_1 \land ..\land e_1.A_n \theta e_2.A_n} E_2 \bowtie_{e_1.A_1 \theta e_3.A_1 \land..\land e_2.A_1 \theta e_3.A_1 \land..\land e_2.A_n \theta e_3.A_n \land .. \land e_1.A_n \theta e_3.A_n} E_3))$
+
+### Question 1.b
+
+**E** $\rightarrow E_1, E_2, E_3$: $\pi_{sid, bookno}((\pi_{sid}(\sigma_{major = 'CS'}M) \times \pi_{bookno}B) - \pi_{sid,bookno}(T))$  
+
+**RA**:
+$\pi_{bookno, title}(B \bowtie (\pi_{e_1.bookno}(E_1 \bowtie_{e_1.sid \ne e2.sid \land e_1.bookno = e_2.bookno} E_2) -$  
+
+$\pi_{e_3.bookno}(E_1 \bowtie_{e_1.sid \ne e2.sid \land e_1.bookno = e_2.bookno} E_2 \bowtie_{e_1.sid \ne e3.sid \land e_2.sid \ne e3.sid \land e_1.bookno = e_3.bookno} E_3)))$
+
+### Question 1.c
+
+    with 
+    E as (select sid, bookno
+    		from (select sid 
+    			   from major 
+    			   where major = 'CS') t cross join (select bookno from book) b
+    		except 
+    		select sid, bookno 
+    		from buys)
+    select bookno, title 
+    from book natural join (select distinct e1.bookno 
+    						from e e1 join e e2 on 
+    						(e1.sid <> e2.sid and e1.bookno = e2.bookno) 
+    						except 
+    						select distinct e3.bookno 
+    						from e e1 join e e2 on (e1.sid <> e2.sid and 
+    						e1.bookno = e2.bookno) join e e3 on 
+    						(e1.sid <> e3.sid and 
+    						e2.sid <> e3.sid and 
+    						e1.bookno = e3.bookno))q;
+
+
+
+### Question 2.a.i
+
+**RA**: $\pi_{e_1}(E_1 \times F) \cup \pi_{e_2}(E_2 - \pi_{e_2}(E_2 \times F))$
+
+### Question 2.a.ii
+
+    SELECT e1.* 
+    FROM E1 e1 cross join F 
+    UNION
+    (select e2.* 
+    from E2 e2 
+    EXCEPT
+    select e2.* 
+    from E2 e2 cross join F);
+
+### Question 2.b.i
+
+**RA**:   
+$\pi_{AisNotEmpty}(((AisNotEmpty:true) \times \pi_{()}A) \cup ((AisNotEmpty:false) - \pi_{AisNotEmpty}((AisNotEmpty:false)\times \pi_{()}A)))$
+
+### Question 2.b.ii
+
+    Select q.AisNotEmpty 
+    from ((select true as AisNotEmpty) q cross join (select distinct row() from A) a
+          UNION 
+          (select q.AisNotEmpty 
+          from (select false as AisNotEmpty) q 
+          EXCEPT
+          select q.AisNotEmpty 
+          from (select false as AisNotEmpty) q cross join (select distinct row() from A) a)) q;
+
+### Question 3.a
+
+For the given schema:  
+F(A,B)  
+G(B,C)  
+
+The binary relation $\{{(x, g(f(x)) | x \in A}\}$ ca be calculated with given RA expression:  
+
+**RA**: $\pi_{A,C}(F \bowtie G)$  
+
+### Question 3.b
+
+For the given schema:  
+F(A,B)  
+G(B,C)
+
+Given that y be a value in C, then $\{(x \in A | g(f(x)) = y\}$ with $y \in C$ can be calculated with given RA exression:  
+
+**RA**: $\pi_A(F \bowtie_{f.b = g.b \land g.c = y}G)$
+
+### Question 4
+
+F denotes function ƒ: A $\rightarrow$ B with schema F(A,B)   
+
+condition for one-one-one function:  
+
+**E** $\rightarrow E$ : $F_1 \bowtie_{f_1.A\ne f_2.A \land f_1.B = f_2.B}F_2$  
+
+**RA** : $\pi_{C}((C:false) \times \pi_{()}(E) \cup ((C:true) - \pi_{C}((C:true) \times \pi_{()}E)))$  
+
+### Question 5
+
+F denotes function ƒ: A $\rightarrow$ B with schema F(A,B)   
+
+condition for onto function:
+
+**E** $\rightarrow E$ : $\pi_{f1.b}(F)- \pi_{f1.b}(F_1 \bowtie_{f_1.A = f_2.A}F_2)$  
+
+**RA** : $\pi_{C}((C:false) \times \pi_{()}(E) \cup ((C:true) - \pi_{C}((C:true) \times \pi_{()}E)))$
+
+### Question 6
+
+given a relation **E(source, target)** satisfiying the condition to be a path. This can be calculated by observing the pattern in which the source and target by incrementally finding (s,t) pairs for N = 1,2,3 . . .N  
+For path length of 1, the expression would be
+$$E_1 : \pi_{source, target}E$$
+for caculating all (s,t) pairs for at most N = 2, we can first find all (s,t) pairs with path length of 2 and then take a union with all (s,t) pairs of path length 1 i.e. $E_1$
+$$RA_{N=2} : \pi_{e_1.source, e_2.target}(E_1 \bowtie_{e1.target = e2.source} E_2))$$
+To find all (s,t) pairs up to path length of 2, we will take the union with $E_1$ as below
+$$E_1 \cup RA_{N=2}$$
+In similar fashion, for calculating the (s,t) pairs for N = 3. Using the value of $RA_{N=2}$, we can find all the pairs (s,t) for path length of 3 as
+$$RA_{N=3} : \pi_{n_2.source, e_1.target}(RA_{N=2} \bowtie_{n_2.target = e_1.source} E_1))$$
+Then for all the (s,t) pairs up to length of 3 we will take the union with $RA_{N=2}$ as
+$$RA_{N=2} \cup RA_{N=3}$$
+The above expression will give all the points (s,t) for path lengt of up to 3. This pattern can be generalized for any value of N. For finding the (s,t) pairs of path length N, where all (s,t) pairs of path length N-1 is known we can use the expression: 
+$$RA_{N=N} :\pi_{{n-1}.source, e.target}(RA_{N=n-1} \bowtie_{{n-1}.target = e.source} E_1))$$  
+and to find all the (s,t) pairs for path length of up to N = N, we will take 
+$$RA_{N=N} \cup RA_{N=N-1}$$
+where,
+$$RA_{N=N-1} = E_1 \cup RA_{N=2}\cup RA_{N=3}\cup RA_{N=4}...\cup RA_{N=n-1}$$
+
+
+# Part 2: RA expressions
+## Notation:  
+Student $\rightarrow$**S**  
+Book$\rightarrow$ **B**  
+Enroll $\rightarrow$**E**  
+Buys $\rightarrow$**T**  
+Major $\rightarrow$**M**  
+
+**Note:**   
+- Expressions are written to mimic solution query with same names of temporary views, but only those temporary views witten in **bold** are used in RA expression here.   
+- Temporary views are given abbreviated names indicated by arrow "$\rightarrow$" infront of the name of temporary views.  
+
+### Question 7
+
+csStudent : $\pi_{sid, sname}(S \bowtie \pi_{sid}(\sigma_{major = 'CS'}(M)))$  
+
+BooksMoreThan10 : $\pi_{sid}(T \bowtie\pi_{bookno}(\sigma_{price >10}(B)))$ 
+
+**RA**: $\pi_{sid, sname}(S \bowtie \pi_{sid}(\sigma_{major = 'CS'}(M)) \bowtie \pi_{sid}(T \bowtie\pi_{bookno}(\sigma_{price >10}(B))))$  
+
+### Question 8
+
+LessThan60 : $\pi_{bookno}(\sigma_{price < 60}(B))$  
+
+**citedBookLessThan60** $\rightarrow Q$ : $\pi_{bookno, citedbookno}(C \bowtie_{citedbookno = bookno}(\pi_{bookno}(\sigma_{price < 60}(B))))$  
+
+**RA**: $\pi_{bookno, title, price}(B \bowtie \pi_{q_1.bookno}(Q_1 \bowtie_{q1.bookno = q2.bookno \land q1.citedbookno \ne q2.citedbookno}(Q_2)))$  
+
+### Question 9
+
+MathStudent : $\pi_{sid}(S \bowtie\pi_{sid}(\sigma_{major ='Math'}(M)))$ 
+
+**boughtByMathStudent** $\rightarrow Q$: $\pi_{bookno}(T \bowtie \pi_{sid}(S \bowtie\pi_{sid}(\sigma_{major ='Math'}(M))))$
+
+**RA**: $\pi_{bookno, title, price}(B - \pi_{bookno, title, price}(B \bowtie Q))$
+
+### Question 10
+
+**NameBookPrice** $\rightarrow Q$ : $\pi_{sid, sname, bookno, title, price}(S \bowtie T \bowtie B)$  
+
+**RA**: $\pi_{sid,sname, titile, price}(Q - \pi_{q_1.sid, q_1.sname, q_1.title, price}(Q_1 \bowtie_{q1.sid = q2.sid \land q1.price < q2.price}Q_2))$
+
+
+### Question 11
+
+**ExceptHighest** $\rightarrow Q$ : $\pi_{b_1.bookno, b_1.title, b_1.price}(B_1 \bowtie_{b1.price<b2.price}B_2)$  
+
+**RA**: $\pi_{bookno, title}(Q - \pi_{q_1.bookno, q_1.title}(Q_1 \bowtie_{q1.price< q2.price}Q_2))$
+
+### Question 12
+
+**MostExpensiveBook** $\rightarrow P$ : $\pi_{bookno}(B - \pi_{b1.bookno}(B_1 \bowtie_{b1.price < b2.price} B_2))$
+
+DontCitesMostExpensiveBook  : $\pi_{bookno}(C - \pi_{bookno, citedbookno}(C \bowtie_{citedbookno = bookno} P))$
+
+**RA**: $\pi_{bookno, title, price}(B \bowtie \pi_{bookno}(C - \pi_{bookno, citedbookno}(C \bowtie_{citedbookno = bookno} P)))$
+
+
+### Question 13
+
+**SingleMajor** $\rightarrow P$ : $\pi_{sid}(\pi_{sid}(M) - \pi_{sid}(M_1 \bowtie_{m1.sid = m2.sid \land m1.major \ne m2.major}M_2))$  
+
+**AllCombinationLessThan40** $\rightarrow Q$ : $\pi_{sid}(T \bowtie \pi_{sid, bookno}(S \times\pi_{bookno}(\sigma_{price < 40}B)))$  
+
+BoughtAllMoreThan40 : $\pi_{sid}(\pi_{sid}(S) - Q)$  
+
+**RA** : $\pi_{sid,sname}(S \bowtie P \bowtie \pi_{sid}(\pi_{sid}(S) - Q))$
+
+### Question 14
+
+**mathAndCS** $\rightarrow P$ : $\pi_{sid}(\pi_{sid}(\sigma_{major = 'Math'}M_1) \bowtie \pi_{sid}(\sigma_{major = 'CS'}M_2))$  
+
+**AllBookCombination** $\rightarrow Q$ : $\pi_{sid, bookno}(P \times \pi_{bookno}(B))$  
+
+ByMathandCSOnly : $\pi_{bookno}(\pi_{bookno}(B) - \pi_{bookno}(Q - (T \bowtie P)))$
+
+**RA**: $\pi_{bookno, title}(B \bowtie (\pi_{bookno}(B) - \pi_{bookno}(Q - (T \bowtie P)))$
+
+
+### Question 15
+
+AtLeast70  : $\pi_{bookno}(\sigma_{price \geq70}B)$  
+
+LessThan30  : $\pi_{bookno}(\sigma_{price < 30}B)$  
+
+**F** $\rightarrow F$ :$\pi_{sid, bookno}(T \bowtie \pi_{bookno}(\sigma_{price \geq70}B)$
+
+**E** $\rightarrow E_1, E_2$  : $\pi_{sid}(T \bowtie \pi_{bookno}(\sigma_{price < 30}B) \cup \pi_{sid}(\pi_{sid}(S) - \pi_{sid}(S \bowtie T)))$  
+
+**RA**: $\pi_{sid,sname}(S \bowtie\pi_{sid}((E_1 \times \pi_{()}F) \cup(\pi_{sid}(E_2 - \pi_{sid}(E_2 \times \pi_{()}F)))))$
+
+### Question 16
+
+**sameMajor** $\rightarrow P$ : $\pi_{m_1.sid_1,m_2.sid_2}(M_1 \bowtie_{m1.major = m2.major \land m1.sid \ne m2.sid}M_2)$  
+In above expression two attributes of Sid has been give name sid1 and sid2.  
+
+**SameMajorBuys** $\rightarrow Q$ : $\pi_{sid, bookno}(T \bowtie \pi_{sid_1}(P))$  
+
+E1 : $\pi_{sid_1, bookno, sid_2}(Q \times \pi_{sid_1}(P))$  
+sid from Q is chosen as sid1 in above expression.  
+
+E2: $\pi_{sid_1, bookno, sid_2}(\pi_{sid_1}(P) \times Q)$  
+sid from Q is chosen as sid2 in above expression.
+
+**E1MinusE2** $\rightarrow J$ : $\pi_{sid_1, sid_2}(\pi_{sid_1, bookno, sid_2}(Q \times \pi_{sid_1}(P)) - \pi_{sid_1, bookno, sid_2}(\pi_{sid_1}(P) \times Q))$  
+
+**E2MinusE1** $\rightarrow K$ : $\pi_{sid_1, sid_2}(\pi_{sid_1, bookno, sid_2}(\pi_{sid_1}(P) \times Q) - \pi_{sid_1, bookno, sid_2}(Q \times \pi_{sid_1}(P)))$  
+
+**RA**: $\pi_{sid_1, sid_2}(( J \bowtie P) \cup (K \bowtie P))$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
